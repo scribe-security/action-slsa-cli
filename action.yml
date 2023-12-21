@@ -1,6 +1,10 @@
-name: valint_slsa
+name: Scribe SLSA Provanence evidence generator
 description: Collect, Create and Store SLSA provenance evidence
-author: ""
+author: Mikey Strauss
+outputs:
+  OUTPUT_PATH:
+    description: evidence output file path
+    value: ${{ steps.run_valint.outputs.OUTPUT_PATH }}
 inputs:
   target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
