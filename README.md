@@ -158,7 +158,7 @@ To overcome the limitation install tool directly - [installer](https://github.co
 ### Usage
 ```yaml
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@v0.4.2
+  uses: scribe-security/action-slsa-cli@v0.4.2
   with:
     target: 'busybox:latest'
 ```
@@ -232,7 +232,7 @@ jobs:
   scribe-sign-verify:
     runs-on: ubuntu-latest
     steps:
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
           target: busybox:latest
           format: attest
@@ -320,7 +320,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
           target: [target]
           format: [statement attest predicate] (default [statement])
@@ -380,7 +380,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name:  Generate evidence step
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
           target: [target]
           format: [statement attest predicate] (default [statement])
@@ -403,7 +403,7 @@ You change users you can use the `USERID` and `USERNAME` env
 
 ```YAML
 - name: Generate cyclonedx json SBOM
-  uses: scribe-security/action-bom@master
+  uses: scribe-security/action-bom-cli@master
   with:
     target: 'busybox:latest'
     format: json
@@ -420,7 +420,7 @@ Create SLSA for remote `busybox:latest` image.
 
 ```YAML
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     target: 'busybox:latest'
     format: statement
@@ -435,7 +435,7 @@ Create SLSA for image built by local docker `image_name:latest`.
 
 ```YAML
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     type: docker
     target: 'image_name:latest'
@@ -463,7 +463,7 @@ steps:
       password: ${{ secrets.REGISTRY_TOKEN }}
 
   - name: Generate SLSA provenance
-    uses: scribe-security/action-slsa@master
+    uses: scribe-security/action-slsa-cli@master
     with:
       target: 'scribesecurity.jfrog.io/scribe-docker-local/example:latest'
       force: true
@@ -478,7 +478,7 @@ Custom metadata added to SLSA.
 ```YAML
 - name: Generate SLSA provenance - add metadata - labels, envs
   id: valint_labels
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
       target: 'busybox:latest'
       force: true
@@ -499,7 +499,7 @@ Using GitHub's built-in action output argument `OUTPUT_PATH` you can access the 
 ```YAML
 - name: Generate SLSA provenance
   id: valint_json
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     target: 'busybox:latest'
     output-file: my_slsa.json
@@ -526,7 +526,7 @@ Using action `OUTPUT_PATH` output argument you can access the generated SLSA pro
 ```YAML
 - name: Generate SLSA provenance statement
   id: valint_slsa_statement
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     target: 'busybox:latest'
     format: statement-slsa
@@ -553,7 +553,7 @@ Create SLSA for local `docker save ...` output.
     outputs: type=docker,dest=stub_local.tar
 
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     type: docker-archive
     target: '/GitHub/workspace/stub_local.tar'
@@ -575,7 +575,7 @@ Create SLSA for the local oci archive.
     outputs: type=oci,dest=stub_oci_local.tar
 
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     type: oci-archive
     target: '/GitHub/workspace/stub_oci_local.tar'
@@ -595,7 +595,7 @@ Create SLSA for a local directory.
 
 - name: valint attest dir
   id: valint_attest_dir
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     type: dir
     target: 'testdir'
@@ -610,7 +610,7 @@ Create SLSA for `mongo-express` remote git repository.
 
 ```YAML
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     type: git
     target: 'https://github.com/mongo-express/mongo-express.git'
@@ -627,7 +627,7 @@ Create SLSA for `my_repo` local git repository.
     path: my_repo
 
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa-cli@master
   with:
     type: git
     target: 'my_repo'
@@ -651,7 +651,7 @@ job_example:
     id-token: write
   steps:
     - name: valint attest
-      uses: scribe-security/action-slsa@master
+      uses: scribe-security/action-slsa-cli@master
       with:
           target: 'busybox:latest'
           format: attest
@@ -674,7 +674,7 @@ job_example:
     id-token: write
   steps:
     - name: valint attest
-    uses: scribe-security/action-slsa@master
+    uses: scribe-security/action-slsa-cli@master
     with:
         target: 'busybox:latest'
         format: attest-slsa
@@ -736,7 +736,7 @@ Full job example of a image signing and verifying flow.
 
       - name: valint attest
         id: valint_attest
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
            target: 'busybox:latest'
            format: attest
@@ -776,7 +776,7 @@ Full job example of a image signing and verifying flow.
 
       - name: valint attest slsa
         id: valint_attest
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
            target: 'busybox:latest'
            format: attest-slsa
@@ -817,7 +817,7 @@ Full job example of a directory signing and verifying flow.
 
       - name: valint attest workdir
         id: valint_attest_dir
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
            type: dir
            target: '/GitHub/workspace/'
@@ -862,7 +862,7 @@ Full job example of a git repository signing and verifying flow.
 
       - name: valint attest local repo
         id: valint_attest_dir
-        uses: scribe-security/action-slsa@master
+        uses: scribe-security/action-slsa-cli@master
         with:
            type: git
            target: '/GitHub/workspace/my_repo'
@@ -913,7 +913,7 @@ valint-dir-test:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - uses: scribe-security/action-slsa@master
+      - uses: scribe-security/action-slsa-cli@master
         id: valint_attest
         with:
           target: busybox:latest
