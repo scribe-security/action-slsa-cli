@@ -34,7 +34,7 @@ inputs:
   force:
     description: Force overwrite cache
   format:
-    description: Evidence format, options=[statement attest predicate]
+    description: Evidence format, options=[statement attest]
   invocation:
     description: Set metadata invocation ID
   predicate:
