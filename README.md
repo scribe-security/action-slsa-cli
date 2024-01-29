@@ -30,14 +30,6 @@ To overcome the limitation install tool directly - [installer](https://github.co
   target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
     required: true
-  type:
-    description: Target source type scheme=[docker,docker-archive, oci-archive, dir, registry, git, generic]
-    deprecationMessage: Please use target fields, formated [type]:[target]:[tag]
-    required: false
-  scribe-audience:
-    description: Scribe auth audience
-    deprecationMessage: Please use scribe-auth-audience instead
-    required: false
   all-env:
     description: Attach all environment variables
   build-type:
@@ -55,7 +47,7 @@ To overcome the limitation install tool directly - [installer](https://github.co
   force:
     description: Force overwrite cache
   format:
-    description: Evidence format, options=[statement attest predicate]
+    description: Evidence format, options=[statement attest]
   invocation:
     description: Set metadata invocation ID
   predicate:
@@ -86,10 +78,14 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: x509 CRL path
   crl-full-chain:
     description: Enable Full chain CRL verfication
+  deliverable:
+    description: Mark as deliverable, options=[true, false]
+  depth:
+    description: Git clone depth
   disable-crl:
     description: Disable certificate revocation verificatoin
   env:
-    description: Environment keys to include in sbom
+    description: Environment keys to include in evidence
   filter-regex:
     description: Filter out files by regex
   filter-scope:
@@ -121,14 +117,16 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Output file name
   pipeline-name:
     description: Pipeline name
-  policy-args:
-    description: Policy arguments
+  platform:
+    description: Select target platform, examples=windows/armv6, arm64 ..)
   predicate-type:
     description: Custom Predicate type (generic evidence format)
   product-key:
     description: Product Key
   product-version:
     description: Product Version
+  rule-args:
+    description: Policy arguments
   scribe-auth-audience:
     description: Scribe auth audience
   scribe-client-id:
@@ -156,11 +154,20 @@ To overcome the limitation install tool directly - [installer](https://github.co
 ```
 
 ### Usage
+Containerized action can be used on Linux runners as following
 ```yaml
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa-cli@v0.4.2
+  uses: scribe-security/action-slsa@v1.1.0
   with:
     target: 'busybox:latest'
+```
+
+Composite Action can be used on Linux or Windows runners as following
+```yaml
+- name: Generate cyclonedx json SBOM
+  uses: scribe-security/action-slsa-cli@v1.1.0
+  with:
+    target: 'hello-world:latest'
 ```
 
 > Use `master` instead of tag to automatically pull latest version.
@@ -238,7 +245,7 @@ jobs:
           format: attest
         env:
           SIGNER_KEY: ${{ secrets.SIGNER_KEY }}
-          SIGNER_CERT: ${{ secrets.SIGNER_KEY }}
+          SIGNER_CERT: ${{ secrets.SIGNER_CERT }}
           COMPANY_CA:  ${{ secrets.COMPANY_CA }}
 
         uses: scribe-security/action-verify@master
@@ -246,7 +253,7 @@ jobs:
           target: busybox:latest
           input-format: attest
         env:
-          SIGNER_CERT: ${{ secrets.SIGNER_KEY }}
+          SIGNER_CERT: ${{ secrets.SIGNER_CERT }}
           COMPANY_CA:  ${{ secrets.COMPANY_CA }}
 ```
 
@@ -320,18 +327,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-        uses: scribe-security/action-slsa-cli@master
+      - uses: scribe-security/action-slsa-cli@master
         with:
           target: [target]
-          format: [statement attest predicate] (default [statement])
+          format: [statement, attest]
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
 
-        uses: scribe-security/action-verify@master
+      - uses: scribe-security/action-verify@master
         with:
           target: [target]
-          input-format: [statement attest predicate] (default [statement])
+          input-format: [statement-slsa, attest-slsa]
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
@@ -397,20 +404,6 @@ jobs:
 ```
 </details>
 
-### Running action as non root user
-By default action runs in its own pid namespace as the root user.
-You change users you can use the `USERID` and `USERNAME` env
-
-```YAML
-- name: Generate cyclonedx json SBOM
-  uses: scribe-security/action-bom-cli@master
-  with:
-    target: 'busybox:latest'
-    format: json
-  env:
-    USERID: 1001
-    USERNAME: runner
-``` 
 
 ### Basic examples
 <details>
@@ -966,5 +959,6 @@ By default add `**/scribe` to your `.gitignore`.
 ## Other Actions
 * [bom](action-bom.md), [source](https://github.com/scribe-security/action-bom)
 * [slsa](action-slsa.md), [source](https://github.com/scribe-security/action-slsa)
+* [evidence](action-evidence.md), [source](https://github.com/scribe-security/action-evidence)
 * [verify](action-verify.md), [source](https://github.com/scribe-security/action-verify)
 * [installer](action-installer.md), [source](https://github.com/scribe-security/action-installer)
