@@ -77,6 +77,10 @@ inputs:
     description: Filter out files by regex
   filter-scope:
     description: Filter packages by scope
+  gate:
+    description: Policy Gate name
+  git-auth:
+    description: 'Git repository authentication info, [format: ''username:password'']'
   git-branch:
     description: Git branch in the repository
   git-commit:
@@ -139,7 +143,7 @@ runs:
       name: Install valint
       run: |2-
         if [ ! -e "$HOME/.scribe/bin/valint" ]; then
-        	curl -sSfL https://get.scribesecurity.com/install.sh  | sh -s -- -t valint:v1.2.0
+        	curl -sSfL https://get.scribesecurity.com/install.sh  | sh -s -- -t valint:v1.3.0
         fi
     - shell: bash
       name: Run valint command
@@ -180,6 +184,8 @@ runs:
         ${{ inputs.env && '--env=' }}${{ inputs.env }} \
         ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }} \
         ${{ inputs.filter-scope && '--filter-scope=' }}${{ inputs.filter-scope }} \
+        ${{ inputs.gate && '--gate=' }}${{ inputs.gate }} \
+        ${{ inputs.git-auth && '--git-auth=' }}${{ inputs.git-auth }} \
         ${{ inputs.git-branch && '--git-branch=' }}${{ inputs.git-branch }} \
         ${{ inputs.git-commit && '--git-commit=' }}${{ inputs.git-commit }} \
         ${{ inputs.git-tag && '--git-tag=' }}${{ inputs.git-tag }} \
